@@ -8,11 +8,34 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PageController extends AbstractController
 {
-    #[Route('/', name: 'app_page')]
+    #[Route('/', name: 'app_home')]
     public function index(): Response
     {
         return $this->render('page/index.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
+    #[Route('/about', name: 'app_about')]
+    public function about(): Response
+    {
+        return $this->render('page/about.html.twig', [
+            'controller_name' => 'PageController',
+        ]);
+    }
+        #[Route('/contact', name: 'app_contact')]
+    public function contact(): Response
+    {
+        return $this->render('page/contact.html.twig', [
+            'controller_name' => 'PageController',
+        ]);
+    }
+
+        #[Route('/games', name: 'app_games')]
+    public function games(): Response
+    {
+        return $this->render('page/games.html.twig', [
+            'controller_name' => 'PageController',
+        ]);
+    }
+
 }

@@ -54,6 +54,11 @@ class Editor
         return $this->games;
     }
 
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+
     public function addGame(Game $game): static
     {
         if (!$this->games->contains($game)) {

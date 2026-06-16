@@ -3,11 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ReviewRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 class Review
 {
@@ -28,16 +27,9 @@ class Review
     #[ORM\ManyToOne(inversedBy: 'reviews')]
     private ?User $user = null;
 
-    /**
-     * @var Collection<int, Game>
-     */
-    #[ORM\OneToMany(targetEntity: Game::class, mappedBy: 'review')]
-    private Collection $games;
+    #[ORM\ManyToOne(inversedBy: 'reviews')]
+    private ?Game $game = null;
 
-    public function __construct()
-    {
-        $this->games = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -52,7 +44,6 @@ class Review
     public function setReview(bool $review): static
     {
         $this->review = $review;
-
         return $this;
     }
 
@@ -64,7 +55,6 @@ class Review
     public function setComment(string $comment): static
     {
         $this->comment = $comment;
-
         return $this;
     }
 
@@ -73,10 +63,10 @@ class Review
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
     {
-        $this->createdAt = $createdAt;
-
+        $this->createdAt = new \DateTimeImmutable();
         return $this;
     }
 
@@ -88,37 +78,17 @@ class Review
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Game>
-     */
-    public function getGames(): Collection
+    public function getGame(): ?Game
     {
-        return $this->games;
+        return $this->game;
     }
 
-    public function addGame(Game $game): static
+    public function setGame(?Game $game): static
     {
-        if (!$this->games->contains($game)) {
-            $this->games->add($game);
-            $game->setReview($this);
-        }
-
-        return $this;
-    }
-
-    public function removeGame(Game $game): static
-    {
-        if ($this->games->removeElement($game)) {
-            // set the owning side to null (unless already changed)
-            if ($game->getReview() === $this) {
-                $game->setReview(null);
-            }
-        }
-
+        $this->game = $game;
         return $this;
     }
 }

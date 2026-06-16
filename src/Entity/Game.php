@@ -49,19 +49,23 @@ class Game
     #[ORM\ManyToMany(targetEntity: Genre::class, mappedBy: 'games')]
     private Collection $genres;
 
-    #[ORM\ManyToOne(inversedBy: 'games')]
-    private ?Review $review = null;
-
     /**
      * @var Collection<int, WhislistItem>
      */
     #[ORM\OneToMany(targetEntity: WhislistItem::class, mappedBy: 'game')]
     private Collection $game;
 
+    /**
+     * @var Collection<int, Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'game')]
+    private Collection $reviews;
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
         $this->game = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,18 +148,6 @@ class Game
         return $this;
     }
 
-    public function getReview(): ?Review
-    {
-        return $this->review;
-    }
-
-    public function setReview(?Review $review): static
-    {
-        $this->review = $review;
-
-        return $this;
-    }
-
      public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
@@ -216,6 +208,36 @@ class Game
             // set the owning side to null (unless already changed)
             if ($game->getGame() === $this) {
                 $game->setGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): static
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getGame() === $this) {
+                $review->setGame(null);
             }
         }
 

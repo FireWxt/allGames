@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\WhislistItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: WhislistItemRepository::class)]
 class WhislistItem
 {
@@ -19,6 +20,9 @@ class WhislistItem
     #[ORM\ManyToOne(inversedBy: 'whislistItems')]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'game')]
+    private ?Game $game = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,9 +33,10 @@ class WhislistItem
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(): static
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -44,6 +49,18 @@ class WhislistItem
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): static
+    {
+        $this->game = $game;
 
         return $this;
     }

@@ -7,6 +7,9 @@ use App\Repository\GameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\WhislistItemRepository;
 
 final class GameController extends AbstractController
 {
@@ -21,10 +24,17 @@ final class GameController extends AbstractController
     }
 
         #[Route('/game/{id}', name: 'app_game_show')]
-    public function show(Game $game): Response
+    public function show(Game $game, Request $request, EntityManagerInterface $entityManager, WhislistItemRepository $wishlistItemRepository): Response
     {
+
+
+        $user = $this->getUser();
+
+
+        $wishlist = $wishlistItemRepository->findOneBy(['game' => $game, 'user' => $user]);
         return $this->render('game/show.html.twig', [
             'game' => $game,
+            'wishlist' => $wishlist,
         ]);
     }
 

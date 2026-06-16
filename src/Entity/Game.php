@@ -52,9 +52,16 @@ class Game
     #[ORM\ManyToOne(inversedBy: 'games')]
     private ?Review $review = null;
 
+    /**
+     * @var Collection<int, WhislistItem>
+     */
+    #[ORM\OneToMany(targetEntity: WhislistItem::class, mappedBy: 'game')]
+    private Collection $game;
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
+        $this->game = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +190,36 @@ class Game
     public function getImageSize(): ?int
     {
         return $this->imageSize;
+    }
+
+    /**
+     * @return Collection<int, WhislistItem>
+     */
+    public function getGame(): Collection
+    {
+        return $this->game;
+    }
+
+    public function addGame(WhislistItem $game): static
+    {
+        if (!$this->game->contains($game)) {
+            $this->game->add($game);
+            $game->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGame(WhislistItem $game): static
+    {
+        if ($this->game->removeElement($game)) {
+            // set the owning side to null (unless already changed)
+            if ($game->getGame() === $this) {
+                $game->setGame(null);
+            }
+        }
+
+        return $this;
     }
 
 }

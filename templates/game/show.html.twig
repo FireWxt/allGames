@@ -46,4 +46,13 @@
             </div>
     </div>
 </section>
+<section class="text-gray-400 bg-gray-900 body-font pb-10">
+    <div class="container px-5 mx-auto flex flex-wrap" id="wishlist-button">
+            {% include 'wishlist/_wishlist_button.html.twig' with {
+                game: game,
+                wishlist: wishlist
+            } %}
+    </div>
+</section>
+
 {% endblock %}

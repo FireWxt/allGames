@@ -38,7 +38,7 @@
                 <div class="p-4">
                     <h2 class="title-font font-medium text-xl text-white pb-2">Catégories</h2>
                     {% for genre in game.genres %}
-                    <a class="bg-gray-700 text-blue-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-500 hover:text-white" href="#">{{ genre.name }}</a>
+                    <a href="{{ path('app_genre_show', {'id': genre.id }) }}" class="bg-gray-700 text-blue-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300 hover:bg-blue-500 hover:text-white">{{ genre.name }}</a>
                     {% endfor %}
 
 

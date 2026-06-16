@@ -24,20 +24,6 @@ final class PageController extends AbstractController
             'controller_name' => 'PageController',
         ]);
     }
-        #[Route('/contact', name: 'app_contact')]
-    public function contact(): Response
-    {
-        return $this->render('page/contact.html.twig', [
-            'controller_name' => 'PageController',
-        ]);
-    }
 
-        #[Route('/games', name: 'app_games')]
-    public function games(): Response
-    {
-        return $this->render('page/games.html.twig', [
-            'controller_name' => 'PageController',
-        ]);
-    }
 
 }
